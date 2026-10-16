@@ -13,12 +13,12 @@ function post_family_tweaks_bsp__install_atbm6031() {
 
 	local mod_dest="${destination}/lib/modules/${kver}/kernel/drivers/net/wireless/atbm"
 	mkdir -p "${mod_dest}"
-	cp -f "/home/cattus/Desktop/armbian-tx1/atbm6031_assets/atbm6031.ko" "${mod_dest}/"
+	cp -f "${SRC}/userpatches/atbm6031_assets/atbm6031.ko" "${mod_dest}/"
 	chmod 644 "${mod_dest}/atbm6031.ko"
 
 	# Install firmware
 	mkdir -p "${destination}/lib/firmware"
-	cp -f /home/cattus/Desktop/armbian-tx1/atbm6031_assets/firmware/* "${destination}/lib/firmware/"
+	cp -f ${SRC}/userpatches/atbm6031_assets/firmware/* "${destination}/lib/firmware/"
 	chmod 644 "${destination}/lib/firmware/"*atbm* 2>/dev/null || true
 
 	# Automatic module load
