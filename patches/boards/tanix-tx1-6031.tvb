@@ -1,0 +1,14 @@
+# Allwinner H313/H616 quad core 2GB LPDDR3 @600MHz 8/16GB eMMC WiFi/BT TV box
+# Model: Tanix TX1 revision "6031" (DRAM bin 600 MHz LPDDR3, extra IR keycode)
+BOARD_NAME="Tanix TX1 (6031)"
+BOARD_VENDOR="allwinner"
+BOARDFAMILY="sun50iw9"
+BOARD_MAINTAINER="cattus"
+INTRODUCED="2020"
+BOOTCONFIG="tanix_tx1_6031_defconfig"
+BOOT_LOGO="desktop"
+KERNEL_TARGET="current"
+KERNEL_TEST_TARGET="current"
+FORCE_BOOTSCRIPT_UPDATE="yes"
+OVERLAY_PREFIX="sun50i-h616"
+enable_extension "atbm6031"
