@@ -73,3 +73,44 @@ Para compilar tus propias imágenes desde cero utilizando el framework oficial d
 ## 📄 Licencia y Créditos
 - Desarrollado y mantenido por la comunidad.
 - Basado en el proyecto [Armbian](https://www.armbian.com).
+
+---
+
+## 📡 Cómo compilar el controlador Wi-Fi (ATBM6031) desde cero
+
+El chip Wi-Fi de esta placa es un **AltoBeam ATBM6031** (bus SDIO). El código fuente original de AltoBeam fue adaptado y parcheado para funcionar en kernels modernos de Linux (6.x / 6.18+):
+
+### 1. Clonar el repositorio base del controlador:
+```bash
+git clone https://github.com/gtxaspec/atbm-wifi.git
+cd atbm-wifi
+```
+
+### 2. Aplicar el parche de compatibilidad Linux 6.18 y soporte 6031:
+Este repositorio incluye el parche completo con todos los fixes de la API moderna de Linux (`struct net_device`, temporizadores, macro `MODULE_DEVICE_TABLE`, carga de firmware relativa y compatibilidad con Linux 6.18):
+```bash
+git apply /ruta/a/patches/atbm6031_driver_linux6.18.patch
+```
+
+### 3. Compilar el módulo para arquitectura ARM64:
+Asegúrate de contar con el compilador cruzado `aarch64-linux-gnu-gcc` y las cabeceras o código fuente del kernel:
+```bash
+make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- KDIR=/ruta/al/kernel/linux-sources modules
+```
+Esto generará el módulo listo: `hal_apollo/atbm6031.ko`.
+
+### 4. Instalación en el sistema de destino:
+1. Copiar el módulo compilado:
+   ```bash
+   sudo cp hal_apollo/atbm6031.ko /lib/modules/$(uname -r)/kernel/drivers/net/wireless/
+   ```
+2. Copiar los archivos de firmware incluidos en `patches/atbm6031_assets/firmware/`:
+   ```bash
+   sudo cp patches/atbm6031_assets/firmware/* /lib/firmware/
+   ```
+3. Configurar opciones y auto-carga:
+   ```bash
+   echo "options atbm6031 fw=atbm6031_fw.bin wifi_bt_comb=0" | sudo tee /etc/modprobe.d/atbm6031.conf
+   echo "atbm6031" | sudo tee /etc/modules-load.d/atbm6031.conf
+   sudo depmod -a
+   ```
